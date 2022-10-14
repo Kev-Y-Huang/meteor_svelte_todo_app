@@ -3,7 +3,9 @@ import { check } from "meteor/check";
 import { TasksCollection } from "../db/TasksCollection";
 
 Meteor.methods({
+  // Insert Task API
   "tasks.insert"(text) {
+    // Check that the task text is a string
     check(text, String);
 
     if (!this.userId) {
@@ -17,7 +19,9 @@ Meteor.methods({
     });
   },
 
+  // Remove Task API
   "tasks.remove"(taskId) {
+    // Check that the taskid is a string
     check(taskId, String);
 
     if (!this.userId) {
@@ -27,7 +31,9 @@ Meteor.methods({
     TasksCollection.remove(taskId);
   },
 
+  // Update Status API
   "tasks.setIsChecked"(taskId, isChecked) {
+    // Check that the taskid is a string and the new status is a boolean
     check(taskId, String);
     check(isChecked, Boolean);
 

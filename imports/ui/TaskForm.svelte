@@ -1,6 +1,7 @@
 <script>
   let newTask = "";
 
+  // Method for submitting a new task and calling insert API
   const handleSubmit = () => {
     if (!newTask) return;
 
@@ -15,7 +16,7 @@
   <input
     type="text"
     name="text"
-    placeholder="Type to add new tasks"
+    placeholder="Type to add new task text"
     bind:value={newTask}
   />
   <button type="submit">Add Task</button>

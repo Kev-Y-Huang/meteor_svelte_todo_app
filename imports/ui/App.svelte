@@ -7,34 +7,38 @@
 
   let hideCompleted = false;
 
+  // Method for updating filter status
   const setHideCompleted = (value) => {
     hideCompleted = value;
   };
 
-  const hideCompletedFilter = { isChecked: { $ne: true } };
-
+  // variables used by the frontend
   let incompleteCount;
   let pendingTasksTitle = "";
   let tasks = [];
   let user = null;
 
   $m: {
+    // Get current user
     user = Meteor.user();
 
+    // Create filters based on user id (if exists) and if task completed
     const userFilter = user ? { userId: user._id } : {};
-    const pendingOnlyFilter = { ...hideCompletedFilter, ...userFilter };
+    const pendingOnlyFilter = {
+      isChecked: { $ne: hideCompleted },
+      ...userFilter,
+    };
 
+    // Select tasks based on user id
     tasks = user
-      ? TasksCollection.find(hideCompleted ? pendingOnlyFilter : userFilter, {
+      ? TasksCollection.find(pendingOnlyFilter, {
           sort: { createdAt: -1 },
         }).fetch()
       : [];
 
-    incompleteCount = user
-      ? TasksCollection.find(pendingOnlyFilter).count()
-      : 0;
-
-    pendingTasksTitle = `${incompleteCount ? ` (${incompleteCount})` : ""}`;
+    // Count the number of tasks and display if greater than 0
+    incompleteCount = user ? tasks.length : 0;
+    pendingTasksTitle = incompleteCount ? ` (${incompleteCount})` : "";
   }
 
   const logout = () => Meteor.logout();

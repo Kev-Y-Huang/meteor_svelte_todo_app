@@ -1,9 +1,11 @@
 <script>
   export let task;
 
+  // Method for calling update status API
   const toggleChecked = () =>
     Meteor.call("tasks.setIsChecked", task._id, !task.isChecked);
 
+  // Method for calling delete API
   const deleteThisTask = () => Meteor.call("tasks.remove", task._id);
 </script>
 

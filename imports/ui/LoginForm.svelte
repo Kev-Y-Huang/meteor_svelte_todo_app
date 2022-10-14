@@ -4,6 +4,7 @@
   let username = "";
   let password = "";
 
+  // Login method
   const handleSubmit = () => {
     Meteor.loginWithPassword(username, password);
   };
