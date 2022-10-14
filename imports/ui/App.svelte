@@ -1,9 +1,9 @@
 <script>
   import { TasksCollection } from "../db/TasksCollection";
-  import LoginForm from "./LoginForm.svelte";
+  import { Meteor } from "meteor/meteor";
   import Task from "./Task.svelte";
   import TaskForm from "./TaskForm.svelte";
-  import "/imports/db/tasksMethods";
+  import LoginForm from "./LoginForm.svelte";
 
   let hideCompleted = false;
 
@@ -12,6 +12,7 @@
   };
 
   const hideCompletedFilter = { isChecked: { $ne: true } };
+
   let incompleteCount;
   let pendingTasksTitle = "";
   let tasks = [];
@@ -53,6 +54,7 @@
       <div class="user" on:click={logout} on:keypress={logout}>
         {user.username} 🚪
       </div>
+
       <TaskForm />
 
       <div class="filter">

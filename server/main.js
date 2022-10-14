@@ -1,6 +1,7 @@
 import { Meteor } from "meteor/meteor";
 import { Accounts } from "meteor/accounts-base";
 import { TasksCollection } from "/imports/db/TasksCollection";
+import "/imports/api/tasksMethods";
 
 const insertTask = (taskText, user) =>
   TasksCollection.insert({
@@ -27,6 +28,6 @@ Meteor.startup(() => {
       "Complete Meteor/Svelte app for CS 279R",
       "Complete user study of When2Meet vs Doodle",
       "Complete research work",
-    ].forEach(insertTask);
+    ].forEach((taskText) => insertTask(taskText, user));
   }
 });
