@@ -17,28 +17,32 @@
   let pendingTasksTitle = "";
   let tasks = [];
   let user = null;
+  let isLoading = true;
+  const handler = Meteor.subscribe("tasks");
 
   $m: {
     // Get current user
     user = Meteor.user();
 
-    // Create filters based on user id (if exists) and if task completed
-    const userFilter = user ? { userId: user._id } : {};
-    const pendingOnlyFilter = {
-      isChecked: { $ne: hideCompleted },
-      ...userFilter,
-    };
+    if (user) {
+      // Set loading variable while waiting for handler
+      isLoading = !handler.ready();
 
-    // Select tasks based on user id
-    tasks = user
-      ? TasksCollection.find(pendingOnlyFilter, {
-          sort: { createdAt: -1 },
-        }).fetch()
-      : [];
+      // Create filters based on user id (if exists) and if task completed
+      const pendingOnlyFilter = {
+        isChecked: { $ne: hideCompleted },
+        userId: user._id,
+      };
 
-    // Count the number of tasks and display if greater than 0
-    incompleteCount = user ? tasks.length : 0;
-    pendingTasksTitle = incompleteCount ? ` (${incompleteCount})` : "";
+      // Select tasks based on user id
+      tasks = TasksCollection.find(pendingOnlyFilter, {
+        sort: { createdAt: -1 },
+      }).fetch();
+
+      // Count the number of tasks and display if greater than 0
+      incompleteCount = user ? tasks.length : 0;
+      pendingTasksTitle = incompleteCount ? ` (${incompleteCount})` : "";
+    }
   }
 
   const logout = () => Meteor.logout();
@@ -66,6 +70,11 @@
           {hideCompleted ? "Show All" : "Hide Completed"}
         </button>
       </div>
+
+      {#if isLoading}
+        <div class="loading">loading...</div>
+      {/if}
+
       <ul class="tasks">
         {#each tasks as task (task._id)}
           <Task {task} />
